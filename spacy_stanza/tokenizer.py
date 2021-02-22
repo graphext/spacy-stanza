@@ -33,7 +33,7 @@ def create_tokenizer(
     ) -> StanzaTokenizer:
         snlp = Pipeline(
             lang=lang,
-            model_dir=model_dir,
+            dir=model_dir,
             package=package,
             processors=processors,
             logging_level=logging_level,
