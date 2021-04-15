@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from spacy.lang.en import EnglishDefaults
+=======
+from spacy.lang.en import EnglishDefaults, English
+>>>>>>> upstream/master
 from spacy.lang.de import GermanDefaults
 import spacy_stanza
 import stanza
@@ -13,7 +17,11 @@ def tags_equal(act, exp):
 def test_spacy_stanza_english():
     lang = "en"
     stanza.download(lang)
+<<<<<<< HEAD
     nlp = spacy_stanza.blank(lang)
+=======
+    nlp = spacy_stanza.load_pipeline(lang)
+>>>>>>> upstream/master
     assert nlp.Defaults == EnglishDefaults
 
     doc = nlp("Hello world! This is a test.")
@@ -55,7 +63,11 @@ def test_spacy_stanza_english():
     assert doc.ents[1].label_ == "GPE"
 
     # Test whitespace alignment
+<<<<<<< HEAD
     doc = nlp(" Barack  Obama  was  born\n\nin Hawaii.")
+=======
+    doc = nlp(" Barack  Obama  was  born\n\nin Hawaii.\n")
+>>>>>>> upstream/master
     assert [t.pos_ for t in doc] == [
         "SPACE",
         "PROPN",
@@ -69,6 +81,10 @@ def test_spacy_stanza_english():
         "ADP",
         "PROPN",
         "PUNCT",
+<<<<<<< HEAD
+=======
+        "SPACE",
+>>>>>>> upstream/master
     ]
     assert [t.dep_ for t in doc] == [
         "",
@@ -83,23 +99,47 @@ def test_spacy_stanza_english():
         "case",
         "root",
         "punct",
+<<<<<<< HEAD
     ]
     assert [t.head.i for t in doc] == [0, 7, 2, 1, 4, 7, 6, 7, 8, 10, 10, 10]
+=======
+        "",
+    ]
+    assert [t.head.i for t in doc] == [0, 7, 2, 1, 4, 7, 6, 7, 8, 10, 10, 10, 12]
+>>>>>>> upstream/master
     assert len(doc.ents) == 2
     assert doc.ents[0].text == "Barack  Obama"
     assert doc.ents[0].label_ == "PERSON"
     assert doc.ents[1].text == "Hawaii"
     assert doc.ents[1].label_ == "GPE"
 
+<<<<<<< HEAD
     # Test serialization
     reloaded_nlp = spacy_stanza.blank(lang).from_bytes(nlp.to_bytes())
+=======
+    # Test trailing whitespace handling
+    doc = nlp("a ")
+    doc = nlp("a  ")
+    doc = nlp("a \n")
+    doc = nlp("\n ")
+    doc = nlp("\t  ")
+    doc = nlp("a\n ")
+    doc = nlp("a  \t  ")
+
+    # Test serialization
+    reloaded_nlp = spacy_stanza.load_pipeline(lang).from_bytes(nlp.to_bytes())
+>>>>>>> upstream/master
     assert reloaded_nlp.config.to_str() == nlp.config.to_str()
 
 
 def test_spacy_stanza_german():
     lang = "de"
     stanza.download(lang)
+<<<<<<< HEAD
     nlp = spacy_stanza.blank(lang)
+=======
+    nlp = spacy_stanza.load_pipeline(lang)
+>>>>>>> upstream/master
     assert nlp.Defaults == GermanDefaults
 
     # warning for misaligned ents due to multi-word token expansion
@@ -111,9 +151,13 @@ def test_spacy_stanza_tokenizer_options():
     # whitespace tokens from spacy tokenizer are handled correctly
     lang = "en"
     stanza.download(lang)
+<<<<<<< HEAD
     nlp = spacy_stanza.blank(
         lang, config={"nlp": {"tokenizer": {"processors": {"tokenize": "spacy"}}}}
     )
+=======
+    nlp = spacy_stanza.load_pipeline(lang, processors={"tokenize": "spacy"})
+>>>>>>> upstream/master
 
     doc = nlp(" Barack  Obama  was  born\n\nin Hawaii.")
     assert [t.text for t in doc] == [
@@ -132,9 +176,13 @@ def test_spacy_stanza_tokenizer_options():
     ]
 
     # pretokenized text is handled correctly
+<<<<<<< HEAD
     nlp = spacy_stanza.blank(
         lang, config={"nlp": {"tokenizer": {"kwargs": {"tokenize_pretokenized": True}}}}
     )
+=======
+    nlp = spacy_stanza.load_pipeline(lang, tokenize_pretokenized=True)
+>>>>>>> upstream/master
     doc = nlp("Barack Obama was born in Hawaii.\nBarack Obama was born in Hawaii.")
     assert [t.text for t in doc] == [
         "Barack",
@@ -167,3 +215,20 @@ def test_spacy_stanza_tokenizer_options():
         "in",
         "Hawaii.",
     ]
+<<<<<<< HEAD
+=======
+
+
+def test_spacy_stanza_from_config():
+    config = {
+        "nlp": {
+            "tokenizer": {
+                "@tokenizers": "spacy_stanza.PipelineAsTokenizer.v1",
+                "lang": "en",
+            }
+        }
+    }
+    nlp = English.from_config(config)
+    assert nlp.Defaults == EnglishDefaults
+    assert type(nlp.tokenizer) == spacy_stanza.tokenizer.StanzaTokenizer
+>>>>>>> upstream/master
